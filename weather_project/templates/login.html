@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+      <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('https://sinpo.id/storage/2023/01/bmkg-prakirakan-jakarta-utara-dan-kepulauan-seribu-hujan-petir-hari-ini-28012023-085123.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0; /* Remove default margin */
+        }
+
+        .login-container {
+            padding: 20px 60px; /* Adjust top and bottom padding, keep left and right padding the same */
+            border: 1px solid black;
+            border-radius: 10px;
+            background-color: lavender; /* Change the background color to lavender */
+            width: 350px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center; /* Center-align the container content */
+        }
+
+        .login-container h2 {
+            margin: 20px 0 20px; /* Add top margin and keep bottom margin the same */
+        }
+
+        .login-container label {
+            display: block;
+            margin: 10px 0;
+            font-weight: bold; /* Make the text bold */
+            text-decoration: underline; /* Add underline to the text */
+            text-align: left; /* Left-align the text */
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 3px solid black;
+            border-radius: 4px;
+        }
+
+        .login-container .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px; /* Add margin to separate the buttons from the input fields */
+        }
+
+        .login-container input[type="submit"],
+        .login-container input[type="reset"] {
+            width: 48%; /* Adjust button width to fit side by side */
+            height: 40px;
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .login-container input[type="submit"]:hover,
+        .login-container input[type="reset"]:hover {
+            background-color: #0056b3;
+        }
+        .login-container input[type="submit"]:hover,
+        .login-container input[type="reset"]:hover {
+        background-color:purple; /* Grey background color on hover */
+    }
+
+
+        .error-message {
+            text-align: center;
+            color: red;
+        }
+
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h2>Login</h2>
+    <form method="post" action="{% url 'checkadminlogin' %}">
+        {% csrf_token %}
+        <label for="uname">Enter Username</label>
+        <input type="text" id="uname" name="uname" required/>
+
+        <label for="pwd">Enter Password</label>
+        <input type="password" id="pwd" name="pwd" required />
+
+        <div class="button-container">
+            <input type="submit" value="Login" class="button"/>
+            <input type="reset" value="Reset" class="button" />
+
+        </div>
+    </form>
+</div>
+
+</body>
+
+</html>
+

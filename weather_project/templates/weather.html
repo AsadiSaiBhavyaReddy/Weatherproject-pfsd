@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0; /* Remove default margin */
+            background: url('https://png.pngtree.com/thumb_back/fh260/back_pic/04/16/77/785825b4ba713f1.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .centered-content {
+            text-align: center;
+            width: 140%; /* Adjust the width as needed */
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+          .search-bar {
+            width: 90%; /* Adjust the width as needed */
+            padding: 10px;
+            border: 5px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px; /* Increase or decrease the margin as needed */
+            font-size: 14px;
+        }
+
+        .special-button {
+            background-color: #4169E1; /* Royal blue color */
+            color: #fff; /* Text color */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .special-button:hover {
+            background-color: #1E90FF; /* Darker blue on hover */
+        }
+
+        table {
+            width: 100%;
+            max-width: 100%; /* Ensure the table doesn't exceed the window width */
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="centered-content">
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="city" class="search-bar" placeholder="Enter city name"><br>
+                <h2><input type="submit" value="Get Weather" class="special-button"></h2>
+            </form>
+
+            {% if weather_data %}
+            <label><strong><h2>Weather in {{weather_data.city}}</h2></strong></label>
+            <div>
+                <label>Today's Weather Report</label>
+                <p>
+                    Temperature: {{ weather_data.temperature_celsius }} (Celsius), {{ weather_data.temperature_fahrenheit }} (Fahrenheit)
+                </p>
+                <p>Description: {{ weather_data.description }}</p>
+            </div>        <div>
+            <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}.png" alt="Weather Icon">
+        </div>
+
+
+            {% endif %}
+
+            {% if three_day_forecast %}
+            <div>
+                <h2>Next Few Days Forecast</h2>
+                <table>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Temperature (Celsius)</th>
+                        <th>Temperature (Fahrenheit)</th>
+                        <th>Description</th>
+                    </tr>
+                    {% for day in three_day_forecast %}
+                    <tr>
+                        <td>{{ day.time }}</td>
+                        <td>{{ day.temperature_celsius }}</td>
+                        <td>{{ day.temperature_fahrenheit }}</td>
+                        <td>{{ day.description }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            {% endif %}
+
+            {% if weather_data %}
+            <h2><button class="special-button" onclick="analyzeData()">Analyze Data</button></h2>
+            <p id="analysisResult" style="font-size: 20px; font-weight: bold;"></p>
+            <p id="disclaimer" style="font-size: 14px; color: #777; margin-top: 10px;"></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function analyzeData() {
+            var temperatureCelsius = {{ weather_data.temperature_celsius }};
+            if (temperatureCelsius > 25) {
+                document.getElementById("analysisResult").textContent = "It's a great day to go out!";
+            } else {
+                document.getElementById("analysisResult").textContent = "You might want to stay home today.";
+            }
+
+            // Analyze the weather forecast for heavy rainy or sunny days
+            var isRainyDay = false;
+            var isSunnyDay = false;
+            {% for day in three_day_forecast %}
+                if ("{{ day.description }}" == "Heavy Rain") {
+                    isRainyDay = true;
+                }
+                if ("{{ day.description }}" == "Clear" || "{{ day.description }}" == "Sunny") {
+                    isSunnyDay = true;
+                }
+            {% endfor %}
+
+             if (isRainyDay) {
+                document.getElementById("analysisResult").textContent += " Watch out for heavy rain in the upcoming days.";
+                document.getElementById("disclaimer").textContent = "Please note that weather forecasts are subject to change, so stay updated for the latest information.";
+            } else if (isSunnyDay) {
+                document.getElementById("analysisResult").textContent += " Enjoy some sunny weather in the upcoming days.";
+                document.getElementById("disclaimer").textContent = "Please note that weather forecasts are subject to change, so stay updated for the latest information.";
+            }
+        }
+    </script>
+</body>
+
+</html>
+
